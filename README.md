@@ -19,11 +19,7 @@ LivoxのLiDAR(Mid-360とか)のログ形式であるlvx2ファイルからROSbag
 3. リポジトリをクローン
    ```sh
    git clone https://github.com/DHA-Tappuri/lvx2_to_rosbag.git
-   cd your-repository
-   ```
-4. 実行
-   ```sh
-   python3 main.py  # Pythonの場合
+   cd lvx2_to_rosbag
    ```
 
 ## 使い方
