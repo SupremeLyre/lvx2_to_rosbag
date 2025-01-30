@@ -9,7 +9,7 @@ LivoxのLiDAR(Mid-360とか)のログ形式であるlvx2ファイルからROSbag
 ## 動作環境
 - OS: Ubuntu 20.04
 - 言語: Python 3.7
-- その他依存関係: ROS2 noetic
+- その他依存関係: ROS noetic
 
 ## インストール方法
 1. 必要な依存関係をインストール  
