@@ -37,7 +37,7 @@ LivoxのLiDAR(Mid-360とか)のログ形式であるlvx2ファイルからROSbag
 - `pc2_frame_id` 点群ファイルのフレームID(default : livox_frame)
 
 ## ライセンス
-[MIT](LICENSE) など、プロジェクトのライセンスを記載します。
+This project is licensed under the BSD 3-Clause License - see the [LICENSE](./LICENSE) file for details.
 
 ## 備考
 - タイムスタンプは同一フレームデータ内のタイムスタンプの平均値を出しています．これで正しいのかは不明．
