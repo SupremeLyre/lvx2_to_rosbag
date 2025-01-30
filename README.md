@@ -21,8 +21,7 @@ LivoxのLiDAR(Mid-360とか)のログ形式であるlvx2ファイルからROSbag
    cd lvx2_to_rosbag
    ```
 
-## 使い方
-- サンプルデータの変換
+## 使い方(サンプルデータ)
 - サンプルデータをLivoxのサポートからダウンロードしてくる  
   https://terra-1-g.djicdn.com/65c028cd298f4669a7f0e40e50ba1131/Mid360/Indoor_sampledata.lvx2  
 - サンプルデータをpythonスクリプト(lvx2_to_rosbag.py)と同じフォルダに入れる
