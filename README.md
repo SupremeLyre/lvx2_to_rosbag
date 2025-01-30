@@ -18,7 +18,7 @@ LivoxのLiDAR(Mid-360とか)のログ形式であるlvx2ファイルからROSbag
 
 3. リポジトリをクローン
    ```sh
-   git clone https://github.com/your-username/your-repository.git
+   git clone https://github.com/DHA-Tappuri/lvx2_to_rosbag.git
    cd your-repository
    ```
 4. 実行
@@ -28,17 +28,26 @@ LivoxのLiDAR(Mid-360とか)のログ形式であるlvx2ファイルからROSbag
 
 ## 使い方
 - サンプルデータの変換
-- 例:
+- サンプルデータをLivoxのサポートからダウンロードしてくる
+  https://terra-1-g.djicdn.com/65c028cd298f4669a7f0e40e50ba1131/Mid360/Indoor_sampledata.lvx2
+- サンプルデータをpythonスクリプト(lvx2_to_rosbag.py)と同じフォルダに入れる
+- スクリプトを実行する
    ```sh
-   ./your_program --option value
+   python3 lvx2_to_rosbag.py --in_file ./Indoor_sampledata.lvx2 --out_file ./Indoor_sampledata.bag --pc2_topic livox_points --pc2_frame_id livox_frame
    ```
 
-## 設定
+## パラメータ
 - 設定ファイルがある場合、その説明を記載します。
-- 例: `config.yaml` の編集方法など。
+- 例: `config.yaml` の編集方法など．
 
 ## ライセンス
 [MIT](LICENSE) など、プロジェクトのライセンスを記載します。
+
+## 備考
+- タイムスタンプは同一フレームデータ内のタイムスタンプの平均値を出しています．これで正しいのかは不明．
+- 生成されるbagファイルはROS1(noetic)用です．多分ROS2でも動くけどROS2用に変更してくれる方歓迎です．
+  (lvx2ファイルから点群データを抜き取る部分と，それをrosbagへ書き込む部分が独立しているので多少は楽なはず)
+- コードが汚いので気をつけて
 
 ## 問い合わせ
 - dha.tappuri@gmail.co.jp
