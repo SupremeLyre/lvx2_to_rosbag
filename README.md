@@ -33,9 +33,9 @@ LivoxのLiDAR(Mid-360とか)のログ形式であるlvx2ファイルからROSbag
 
 ## パラメータ
 - `in_file` 変換対象のlvx2ファイル
-- `out_file` 変換先のlvx2ファイル
-- `pc2_topic` 点群ファイルのPointCloud2形式の出力トピック名
-- `pc2_frame_id` 点群ファイルのフレームID
+- `out_file` 変換先のbagファイル
+- `pc2_topic` 点群ファイルのPointCloud2形式の出力トピック名(default : livox_points)
+- `pc2_frame_id` 点群ファイルのフレームID(default : livox_frame)
 
 ## ライセンス
 [MIT](LICENSE) など、プロジェクトのライセンスを記載します。
