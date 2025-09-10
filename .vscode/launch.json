@@ -1,0 +1,24 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Python File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--in_file",
+                "~/data/datasets/20241023/2024-10-23_16-03-10.lvx2",
+                "--out_file",
+                "~/data/datasets/20241023/2024-10-23_16-03-10.bag",
+                "--pc2_topic",
+                "livox_points",
+                "--pc2_frame_id",
+                "livox_frame"
+            ]
+        }
+    ]
+}

@@ -32,27 +32,52 @@ class LVX2_to_ROSBAG(object):
             PointField( 'x',             0, PointField.FLOAT32, 1 ),
             PointField( 'y',             4, PointField.FLOAT32, 1 ),
             PointField( 'z',             8, PointField.FLOAT32, 1 ),
-            PointField( 'reflectivity', 12, PointField.FLOAT32, 1 ),
-            PointField( 'tag',          16, PointField.UINT32,  1 )
+            PointField( 'reflectivity', 12, PointField.UINT8, 1 ),
+            PointField( 'tag',          13, PointField.UINT8,  1 )
         ]
+        
 
-        i = 0
-        _frm_size = len(self._lvx2._frames)
-        for _frm in self._lvx2._frames:
-            i = i + 1
-            print('processing frames ({0}/{1})'.format(i, _frm_size))
+        # i = 0
+        # _frm_size = len(self._lvx2._frames)
+        # for _frm in self._lvx2._frames:
+        #     i = i + 1
+        #     print('processing frames ({0}/{1})'.format(i, _frm_size))
+
+        #     _ts = 0.0
+        #     _points_with_fields = []            
+        #     for _pkg in _frm.packages:
+        #         for _p in _pkg.points:
+        #             _points_with_fields.append( [_p.x, _p.y, _p.z, _p.reflectivity, _p.tag] )
+
+        #     _timestamp       = rospy.Time.from_sec(_frm.timestamp)
+        #     _header          = Header()
+        #     _header.stamp    = _timestamp
+        #     _header.frame_id = self._pc2_frame_id
+        #     _pc2             = pc2.create_cloud(_header, _fields, _points_with_fields)
+        #     _bag.write(self._pc2_topic, _pc2, _timestamp)
+
+        while(True):
+            _tmpfrm = self._lvx2.read_frame()
+            if( _tmpfrm == None ):
+                break
+
+            print('processing frame (timestamp={})'.format(_tmpfrm.timestamp))
 
             _ts = 0.0
             _points_with_fields = []            
-            for _pkg in _frm.packages:
+            for _pkg in _tmpfrm.packages:
                 for _p in _pkg.points:
-                    _points_with_fields.append( [_p.x, _p.y, _p.z, _p.reflectivity, _p.tag] )
+                    _points_with_fields.append( [float(_p.x), float(_p.y), float(_p.z), int(_p.reflectivity) & 0xFF, int(_p.tag) & 0xFF] )
 
-            _timestamp       = rospy.Time.from_sec(_frm.timestamp)
+            _timestamp       = rospy.Time.from_sec(_tmpfrm.timestamp)
             _header          = Header()
             _header.stamp    = _timestamp
             _header.frame_id = self._pc2_frame_id
-            _pc2             = pc2.create_cloud(_header, _fields, _points_with_fields)
+            try:
+                _pc2             = pc2.create_cloud(_header, _fields, _points_with_fields)
+            except Exception as e:
+                print('Error creating PointCloud2: {}'.format(e))
+                return 
             _bag.write(self._pc2_topic, _pc2, _timestamp)
 
         # close rosbag file        

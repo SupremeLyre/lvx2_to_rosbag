@@ -294,6 +294,30 @@ class LVX2_PARSER(object):
 
         return ret
 
+    def read_frame( self ):
+        _data = self._lvx2fp.read(24)
+        if(_data == b''):
+            print('EOF')
+            self._frame = None
+            return None
+        
+        # parse frame header
+        _frmp = Frame()
+        _frmp.header = self.parse_frame_header(_data)
+
+        # parse packages
+        _data          = self._lvx2fp.read( _frmp.header.frame_size - 24 )
+        _frmp.packages  = self.parse_frame_packages(_data)
+        
+        # add timestamp
+        _ts = 0.0
+        for _pkg in _frmp.packages:
+            _ts = _ts + _pkg.header.timestamp
+        _frmp.timestamp = _ts / len(_frmp.packages)
+
+        # add frame
+        self._frame0 = _frmp
+        return _frmp
 
     # constructor
     def __init__( self, in_file:str ):
@@ -305,23 +329,24 @@ class LVX2_PARSER(object):
         self._prv_header = PrivateHeader()
         self._devices    = []
         self._frames     = []
+        self._frame0 = None
         
         # open binary file
-        _lvx2 = open(self._in_file, 'rb')
-        if( _lvx2 == None ):
+        self._lvx2fp = open(self._in_file, 'rb')
+        if( self._lvx2fp == None ):
             print('File Open Error. (e.g. file not exist)')
             return
         
         # read public header
         print('==================== Public Header ====================')
-        _data = _lvx2.read(24)
+        _data = self._lvx2fp.read(24)
         self._pub_header = self.parse_public_header(_data)
         if( self._pub_header == None ):
             return
 
         # read private heaer
         print('==================== Private Header ====================')
-        _data = _lvx2.read(5)
+        _data = self._lvx2fp.read(5)
         self._prv_header = self.parse_private_header(_data)        
         if( self._prv_header == None ):
             return
@@ -331,7 +356,7 @@ class LVX2_PARSER(object):
 
         for i in range(self._prv_header.device_count):
             print('Device #{}'.format(i))
-            _data = _lvx2.read(63)
+            _data = self._lvx2fp.read(63)
             _dev  = self.parse_device_information(_data)
             
             if( _dev == None ):
@@ -341,33 +366,35 @@ class LVX2_PARSER(object):
             self._devices.append(_dev)
 
         
-        print('==================== Point Cloud Data ====================')        
-        while(True):
-            # read frame data
-            _data = _lvx2.read(24)
-            if(_data == b''):
-                print('EOF')
-                break
+        # print('==================== Point Cloud Data ====================')        
+        # while(True):
+        #     # read frame data
+        #     _data = self._lvx2fp.read(24)
+        #     if(_data == b''):
+        #         print('EOF')
+        #         break
             
-            # parse frame header
-            _frm = Frame()
-            _frm.header = self.parse_frame_header(_data)
+        #     # parse frame header
+        #     _frm = Frame()
+        #     _frm.header = self.parse_frame_header(_data)
 
-            # parse packages
-            _data          = _lvx2.read( _frm.header.frame_size - 24 )
-            _frm.packages  = self.parse_frame_packages(_data)
+        #     # parse packages
+        #     _data          = self._lvx2fp.read( _frm.header.frame_size - 24 )
+        #     _frm.packages  = self.parse_frame_packages(_data)
             
-            # add timestamp
-            _ts = 0.0
-            for _pkg in _frm.packages:
-                _ts = _ts + _pkg.header.timestamp
-            _frm.timestamp = _ts / len(_frm.packages)
+        #     # add timestamp
+        #     _ts = 0.0
+        #     for _pkg in _frm.packages:
+        #         _ts = _ts + _pkg.header.timestamp
+        #     _frm.timestamp = _ts / len(_frm.packages)
 
-            # add frame
-            self._frames.append(_frm)
+        #     # add frame
+        #     self._frames.append(_frm)
 
-        print('==================== Parser Result ====================')
+        # print('==================== Parser Result ====================')
 
+
+    
     # destructor
     def __del__(self):
         pass
